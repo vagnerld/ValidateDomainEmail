@@ -9,7 +9,7 @@ $email = $_REQUEST['email'];
 
 echo $email."<br /><br />";
 
-echo "<br />Voce quis dizer: <b>".$e->check($email);
+echo "<br />Voce quis dizer: <b>".$e->check($email)."?";
 
 
 
