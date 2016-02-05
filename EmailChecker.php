@@ -2,7 +2,7 @@
 
 class ValidateDomainEmail {
 
-    private $domains_list = array(
+    private $list_domains = array(
         "yahoo", "hotmail", "gmail", "live", "outlook", "msn", "globo", "uol"
     );
     public $precision = 70;
@@ -29,7 +29,7 @@ class ValidateDomainEmail {
         $domain_email = $d['domain'];
         $final_email = $d['final'];
 
-        foreach ($this->domains_list as $domain) {
+        foreach ($this->list_domains as $domain) {
             similar_text($domain_email, $domain, $percent);
             if($percent > $this->precision) {
                 if($domain == "gmail")
@@ -52,7 +52,7 @@ class ValidateDomainEmail {
         $domain_email = $d['domain'];
         $final_email = $d['final'];
 
-        foreach ($this->domains_list as $domain) {
+        foreach ($this->list_domains as $domain) {
             similar_text($domain_email, $domain, $percent);
             if($percent > $this->precision) {
                 $str .= "<tr style='background:#8BC34A;'><td style='border: 1px solid #ccc; padding: 10px;'>".$domain."</td><td style='border: 1px solid #ccc; padding: 10px;'>".$percent."% </td></tr>";
@@ -74,7 +74,7 @@ class ValidateDomainEmail {
         $domain_email = $d['domain'];
         $final_email = $d['final'];
 
-        foreach ($this->domains_list as $domain) {
+        foreach ($this->list_domains as $domain) {
             similar_text($domain_email, $domain, $percent);
             $result[$domain] = $percent."%";
         }
