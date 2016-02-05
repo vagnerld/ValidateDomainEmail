@@ -5,6 +5,7 @@ class ValidateDomainEmail {
     private $domains_list = array(
         "yahoo", "hotmail", "gmail", "live", "outlook", "msn", "globo", "uol"
     );
+    public $precision = 70;
 
     private function explodeEmail($email){
         $d = explode('@', $email);
@@ -30,7 +31,7 @@ class ValidateDomainEmail {
 
         foreach ($this->domains_list as $domain) {
             similar_text($domain_email, $domain, $percent);
-            if($percent > 75) {
+            if($percent > $this->precision) {
                 if($domain == "gmail")
                     $email = $name_email."@".$domain.".com";
                 else
@@ -43,8 +44,8 @@ class ValidateDomainEmail {
 
     public function print_table($email) {
 
-        echo "<table style='border-collapse: collapse; margin: 0px auto;'>";
-
+        $str .= "<table style='border-collapse: collapse; margin: 0px auto;'>";
+        $str .= "<tr><td style='border: 1px solid #ccc; padding: 10px;' COLSPAN=2> <b>Precisão de ".$this->precision."% </b></td></tr>";
         $d = $this->explodeEmail($email);
 
         $name_email = $d['name'];
@@ -53,16 +54,33 @@ class ValidateDomainEmail {
 
         foreach ($this->domains_list as $domain) {
             similar_text($domain_email, $domain, $percent);
-            if($percent > 75) {
-                echo "<tr style='background:#8BC34A;'><td style='border: 1px solid #ccc; padding: 10px;'>".$domain."</td><td style='border: 1px solid #ccc; padding: 10px;'>".$percent."% </td></tr>";
+            if($percent > $this->precision) {
+                $str .= "<tr style='background:#8BC34A;'><td style='border: 1px solid #ccc; padding: 10px;'>".$domain."</td><td style='border: 1px solid #ccc; padding: 10px;'>".$percent."% </td></tr>";
             } else {
-                echo "<tr><td style='border: 1px solid #ccc; padding: 10px;'>".$domain."</td><td style='border: 1px solid #ccc; padding: 10px;'>".$percent."% </td></tr>";
+                $str .= "<tr><td style='border: 1px solid #ccc; padding: 10px;'>".$domain."</td><td style='border: 1px solid #ccc; padding: 10px;'>".$percent."% </td></tr>";
             }
         }
 
-        echo "</table>";
+        $str .= "</table>";
 
+        return $str;
     }
+
+    public function array_table($email) {
+        $result = array();
+        $d = $this->explodeEmail($email);
+
+        $name_email = $d['name'];
+        $domain_email = $d['domain'];
+        $final_email = $d['final'];
+
+        foreach ($this->domains_list as $domain) {
+            similar_text($domain_email, $domain, $percent);
+            $result[$domain] = $percent."%";
+        }
+        return $result;
+    }
+
 
 }
 
