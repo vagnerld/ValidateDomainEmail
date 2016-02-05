@@ -31,7 +31,10 @@ class ValidateDomainEmail {
         foreach ($this->domains_list as $domain) {
             similar_text($domain_email, $domain, $percent);
             if($percent > 75) {
-                $email = $name_email."@".$domain.".".$final_email;
+                if($domain == "gmail")
+                    $email = $name_email."@".$domain.".com";
+                else
+                    $email = $name_email."@".$domain.".".$final_email;
                 break;
             }
         }
