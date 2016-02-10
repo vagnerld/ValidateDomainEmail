@@ -7,7 +7,7 @@
 <body style="text-align:center;">
 	<br /><br /><br /><br /><br />
 	<form method="post">
-		<input type="text" name="email" value="<?php echo $email; ?>" placeholder="E-mail">
+		<input type="email" name="email" value="<?php echo $email; ?>" placeholder="E-mail" required>
 		<input type="submit">
 	</form>
 
