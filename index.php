@@ -11,13 +11,12 @@
 		<input type="submit">
 	</form>
 
-	<?php 
-		require_once "./EmailChecker.php"; // lib 
+	<?php
+		require_once "./EmailChecker.php";
 		$e = new ValidateDomainEmail();
-		$e->precision = 70;
 
-		echo "<br />Voce quis dizer: <b>".$e->check($email)."</b>? <br /><br /><br />";
-		echo $e->print_table($email)."<br /><br /><br />";
-		print_r($e->array_table($email));
+		echo "Você quis dizer: <b>".$e->check($email)."</b>?";
+		echo "<br /><br /><br />";
+		echo $e->print_table($email);
 	?>
 </body>

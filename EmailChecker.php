@@ -1,88 +1,78 @@
 <?php
 
-class ValidateDomainEmail {
+    class ValidateDomainEmail {
 
-    private $list_domains = array(
-        "yahoo", "hotmail", "gmail", "live", "outlook", "msn", "globo", "uol"
-    );
-    public $precision = 70;
+        private $list_domains = array(
+            "yahoo.com", "yahoo.com.br",
+            "hotmail.com", "hotmail.com.br",
+            "gmail.com",
+            "live.com",
+            "outlook.com", "outlook.com.br",
+            "msn.com",
+            "globo.com",
+            "uol.com.br"
+        );
 
-    private function explodeEmail($email){
-        $d = explode('@', $email);
-        $name = $d[0];
-        $e = explode('.', $d[1]);
-        $domain = $e[0];
-        $final = $e[1];
-        if($e[2]){ $final .= ".".$e[2]; }
-        if($e[3]){ $final .= ".".$e[3]; }
+        public $precision = 75;
 
-        return array(
-                    'name'=>$name,
-                    'domain'=>$domain,
-                    'final'=>$final
-                );
-    }
+        private function explodeEmail($email){
+            $d = explode('@', $email);
+            $name = $d[0];
+            $domain = $d[1];
 
-    public function check($email) {
-        $d = $this->explodeEmail($email);
-        $name_email = $d['name'];
-        $domain_email = $d['domain'];
-        $final_email = $d['final'];
+            return array(
+                        'name'=>$name,
+                        'domain'=>$domain
+                    );
+        }
 
-        foreach ($this->list_domains as $domain) {
-            similar_text($domain_email, $domain, $percent);
-            if($percent > $this->precision) {
-                if($domain == "gmail") {
-                    $email = $name_email."@".$domain.".com";
-                } else {
-                    $email = $name_email."@".$domain.".".$final_email;
+        public function check($email) {
+            $d = $this->explodeEmail($email);
+            $name_email = $d['name'];
+            $domain_email = $d['domain'];
+
+            $complete = false;
+            $input_domains = array();
+            foreach ($this->list_domains as $domain) {
+                similar_text($domain_email, $domain, $percent);
+                if($percent > $this->precision) {
+                    $input_domains[$domain] = $percent;
+                    $complete = true;
                 }
-                break;
             }
-        }
-        return $email;
-    }
-
-    public function print_table($email) {
-
-        $str .= "<table style='border-collapse: collapse; margin: 0px auto;'>";
-        $str .= "<tr><td style='border: 1px solid #ccc; padding: 10px;' COLSPAN=2> <b>Precisão de ".$this->precision."% </b></td></tr>";
-        $d = $this->explodeEmail($email);
-
-        $name_email = $d['name'];
-        $domain_email = $d['domain'];
-        $final_email = $d['final'];
-
-        foreach ($this->list_domains as $domain) {
-            similar_text($domain_email, $domain, $percent);
-            if($percent > $this->precision) {
-                $str .= "<tr style='background:#8BC34A;'><td style='border: 1px solid #ccc; padding: 10px;'>".$domain."</td><td style='border: 1px solid #ccc; padding: 10px;'>".$percent."% </td></tr>";
+            if ($complete) {
+                arsort($input_domains);
+                $email = $name_email."@".key($input_domains);
             } else {
-                $str .= "<tr><td style='border: 1px solid #ccc; padding: 10px;'>".$domain."</td><td style='border: 1px solid #ccc; padding: 10px;'>".$percent."% </td></tr>";
+                $email = $name_email."@".$domain_email;
             }
+            return $email;
         }
 
-        $str .= "</table>";
+        public function print_table($email) {
 
-        return $str;
-    }
+            $str .= "<table style='border-collapse: collapse; margin: 0px auto;'>";
+            $str .= "<tr><td style='border: 1px solid #ccc; padding: 10px;' COLSPAN=2> <b>Precisão de ".$this->precision."% </b></td></tr>";
+            $d = $this->explodeEmail($email);
 
-    public function array_table($email) {
-        $result = array();
-        $d = $this->explodeEmail($email);
+            $name_email = $d['name'];
+            $domain_email = $d['domain'];
+            $final_email = $d['final'];
 
-        $name_email = $d['name'];
-        $domain_email = $d['domain'];
-        $final_email = $d['final'];
+            foreach ($this->list_domains as $domain) {
+                similar_text($domain_email, $domain, $percent);
+                if($percent > $this->precision) {
+                    $str .= "<tr style='background:#8BC34A;'><td style='border: 1px solid #ccc; padding: 10px;'>".$domain."</td><td style='border: 1px solid #ccc; padding: 10px;'>".$percent."% </td></tr>";
+                } else {
+                    $str .= "<tr><td style='border: 1px solid #ccc; padding: 10px;'>".$domain."</td><td style='border: 1px solid #ccc; padding: 10px;'>".$percent."% </td></tr>";
+                }
+            }
 
-        foreach ($this->list_domains as $domain) {
-            similar_text($domain_email, $domain, $percent);
-            $result[$domain] = $percent."%";
+            $str .= "</table>";
+
+            return $str;
         }
-        return $result;
+
     }
-
-
-}
 
 ?>
